@@ -1,5 +1,8 @@
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.4.21;
+
+
 
 import "./ierc20token.sol";
 
@@ -17,6 +20,7 @@ contract TokenMarket {
     Listing[] public listings;
 
     event ListingChanged(address indexed seller, uint256 indexed index);
+    event ListingPrice(address indexed seller, uint256 indexed );
 
     function list(
         IERC20Token token,
@@ -49,11 +53,21 @@ contract TokenMarket {
         listing.unitsAvailable -= units;
         require(listing.token.transferFrom(listing.seller, msg.sender, units));
 
-        uint256 cost = (units * listing.priceNumerator) /
+        uint256 cost = (units * listing.priceNumerator); 
             listing.priceDenominator;
         require(msg.value == cost);
         listing.seller.transfer(cost);
 
         emit ListingChanged(listing.seller, index);
     }
+
+    function showPrice(uint256 index) public{
+
+        require(listings[index].seller == msg.sender);
+        Listing storage listing = listings[index];
+
+        emit ListingPrice( listing.seller, index);
+        
+         }
+    
 }
