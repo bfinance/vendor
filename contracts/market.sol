@@ -3,7 +3,6 @@
 pragma solidity ^0.4.21;
 
 
-
 import "./ierc20token.sol";
 
 contract TokenMarket {
@@ -65,6 +64,7 @@ contract TokenMarket {
 
         require(listings[index].seller == msg.sender);
         Listing storage listing = listings[index];
+            listing.priceDenominator;
 
         emit ListingPrice( listing.seller, index);
         
