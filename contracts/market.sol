@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MIT
+pragma solidity  0.8.0;
+
+import "./ierc20token"
+
 contract TokenMarket {
 
     uint immutable baseFee = 10;
