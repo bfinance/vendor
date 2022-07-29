@@ -1,8 +1,3 @@
-// SPDX-License-Identifier: MIT
-pragma solidity  0.8.0;
-
-import "./ierc20token"
-
 contract TokenMarket {
 
     uint immutable baseFee = 10;
@@ -44,14 +39,20 @@ contract TokenMarket {
 
 
     //This performs the function of selling the listed tokens from the lister to the buyer.
-    function buy(uint256 index, uint256 units) public payable {
+
+    function buy(uint256 index, uint256 units) payable public {
     Listing storage listing = listings[index];
-    require(listing.unitsAvailable >= units, "Unit not available");
-    uint256 cost = (units * baseFee)/baseDiv;
-    require(msg.value == cost, "Enter The Correct Cost");
-    listing.unitsAvailable -= units;
-    payable(listing.seller).transfer(cost);
-    require(listing.token.transferFrom(listing.seller, msg.sender, units), "Token Approved");
+
+        require(listing.unitsAvailable >= units);
+        listing.unitsAvailable -= units;
+        require(listing.token.transferFrom(listing.seller, msg.sender, units));
+
+        uint256 cost = (units * baseFee) /
+            baseDiv;
+        require(msg.value == cost);
+        payable(listing.seller).transfer(cost);
+
+    emit ListingChanged(listing.seller, index);
     emit RemainingUnit(listing.seller, listing.unitsAvailable);
     emit AmountBought(units, cost);
     }
