@@ -37,6 +37,11 @@ contract TokenMarket {
     emit ListingChanged(msg.sender, index);
     }
 
+    function viewListing(uint sellerId) public view returns(uint) {
+        Listing storage listing = listings[sellerId];
+        return listing.unitsAvailable;
+    }
+
 
     //This performs the function of selling the listed tokens from the lister to the buyer.
 
