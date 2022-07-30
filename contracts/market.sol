@@ -11,9 +11,6 @@ contract TokenMarket {
     address seller;
     IERC20Token token;
     uint256 unitsAvailable;
-    // wei/unit price as a rational number
-    // uint256 priceNumerator;
-    // uint256 priceDenominator;
     }
     Listing[] public listings;
 
@@ -46,7 +43,6 @@ contract TokenMarket {
         Listing storage listing = listings[sellerId];
         return listing.unitsAvailable;
     }
-
 
     //This performs the function of selling the listed tokens from the lister to the buyer.
 
