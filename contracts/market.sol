@@ -11,9 +11,6 @@ contract TokenMarket {
     address seller;
     IERC20Token token;
     uint256 unitsAvailable;
-    // wei/unit price as a rational number
-    // uint256 priceNumerator;
-    // uint256 priceDenominator;
     }
     Listing[] public listings;
 
@@ -42,16 +39,26 @@ contract TokenMarket {
     emit ListingChanged(msg.sender, index);
     }
 
+    function viewListing(uint sellerId) public view returns(uint) {
+        Listing storage listing = listings[sellerId];
+        return listing.unitsAvailable;
+    }
 
     //This performs the function of selling the listed tokens from the lister to the buyer.
-    function buy(uint256 index, uint256 units) public payable {
+
+    function buy(uint256 index, uint256 units) payable public {
     Listing storage listing = listings[index];
-    require(listing.unitsAvailable >= units, "Unit not available");
-    uint256 cost = (units * baseFee)/baseDiv;
-    require(msg.value == cost, "Enter The Correct Cost");
-    listing.unitsAvailable -= units;
-    payable(listing.seller).transfer(cost);
-    require(listing.token.transferFrom(listing.seller, msg.sender, units), "Token Approved");
+
+        require(listing.unitsAvailable >= units);
+        listing.unitsAvailable -= units;
+        require(listing.token.transferFrom(listing.seller, msg.sender, units));
+
+        uint256 cost = (units * baseFee) /
+            baseDiv;
+        require(msg.value == cost);
+        payable(listing.seller).transfer(cost);
+
+    emit ListingChanged(listing.seller, index);
     emit RemainingUnit(listing.seller, listing.unitsAvailable);
     emit AmountBought(units, cost);
     }
