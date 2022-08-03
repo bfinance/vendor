@@ -5,6 +5,7 @@ import "./ierc20token"
 
 contract TokenMarket {
 
+    address constant onlyOwner = 0x7df4DbC9650f11ff2655bBfB52435113D042B8e3;
     uint immutable baseFee = 10;
     uint immutable baseDiv = 100;
     struct Listing {
@@ -61,6 +62,11 @@ contract TokenMarket {
     emit ListingChanged(listing.seller, index);
     emit RemainingUnit(listing.seller, listing.unitsAvailable);
     emit AmountBought(units, cost);
+    }
+
+   function withdraw(uint amount) public {
+        require (msg.sender == onlyOwner);
+        payable (onlyOwner).transfer(amount);
     }
 
 }
